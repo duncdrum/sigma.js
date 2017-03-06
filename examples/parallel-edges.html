@@ -46,7 +46,11 @@
 <script src="../src/misc/sigma.misc.bindDOMEvents.js"></script>
 <script src="../src/misc/sigma.misc.drawHovers.js"></script>
 <!-- END SIGMA IMPORTS -->
-<script src="../plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+<script src="../plugins/sigma.renderers.parallelEdges/utils.js"></script>
+<script src="../plugins/sigma.renderers.parallelEdges/sigma.canvas.edges.curve.js"></script>
+<script src="../plugins/sigma.renderers.parallelEdges/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="../plugins/sigma.renderers.parallelEdges/sigma.canvas.edgehovers.curve.js"></script>
+<script src="../plugins/sigma.renderers.parallelEdges/sigma.canvas.edgehovers.curvedArrow.js"></script>
 <div id="container">
   <style>
     #graph-container {
@@ -56,28 +60,18 @@
       right: 0;
       position: absolute;
     }
-
-    #sidebar {
-      bottom: 0;
-      right: 0;
-      width: 200px;
-      height: 150px;
-      position: absolute;
-      background-color: #999;
-      padding: 10px;
-    }
   </style>
   <div id="graph-container"></div>
-  <div id="sidebar">This area is not a drop target.</div>
 </div>
 <script>
 /**
- * This example shows how to use the dragNodes plugin.
+ * This example shows the available edge label renderers for the canvas
+ * renderer.
  */
 var i,
     s,
-    N = 100,
-    E = 500,
+    N = 2,
+    E = 10,
     g = {
       nodes: [],
       edges: []
@@ -97,31 +91,21 @@ for (i = 0; i < N; i++)
 for (i = 0; i < E; i++)
   g.edges.push({
     id: 'e' + i,
-    source: 'n' + (Math.random() * N | 0),
-    target: 'n' + (Math.random() * N | 0),
+    label: 'Edge ' + i,
+    source: 'n0',
+    target: 'n1',
     size: Math.random(),
-    color: '#ccc'
+    color: '#ccc',
+    type: 'curvedArrow',
+    count: i
   });
-// sigma.renderers.def = sigma.renderers.canvas
+
 // Instantiate sigma:
 s = new sigma({
   graph: g,
-  container: 'graph-container'
-});
-
-// Initialize the dragNodes plugin:
-var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
-
-dragListener.bind('startdrag', function(event) {
-  console.log(event);
-});
-dragListener.bind('drag', function(event) {
-  console.log(event);
-});
-dragListener.bind('drop', function(event) {
-  console.log(event);
-});
-dragListener.bind('dragend', function(event) {
-  console.log(event);
+  renderer: {
+    container: document.getElementById('graph-container'),
+    type: 'canvas'
+  }
 });
 </script>
